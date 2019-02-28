@@ -19,12 +19,37 @@ const WebRTCLoader = function(provider, url, errorTrigger){
     let peerConnection = "";
     let statisticsTimer = "";
     const config = {
-        'iceServers': [{
+        'iceServers': [
+            {
+                urls: 'turn:numb.viagenie.ca',
+                credential: 'muazkh',
+                username: 'webrtc@live.com'
+            },
+            {
+                urls: 'turn:192.158.29.39:3478?transport=udp',
+                credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                username: '28224511:1379330808'
+            },
+            {
+                urls: 'turn:192.158.29.39:3478?transport=tcp',
+                credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                username: '28224511:1379330808'
+            },
+            {
+                urls: 'turn:turn.bistri.com:80',
+                credential: 'homeo',
+                username: 'homeo'
+            },
+            {
+                urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+                credential: 'webrtc',
+                username: 'webrtc'
+            },{
             'urls': 'stun:stun.l.google.com:19302'
         }]
     };
     const that = {};
-    let mySdp = "";
+    let answerSdp = "";
 
 
     (function() {
@@ -47,7 +72,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                 // my SDP created.
                 var localSDP = connection.localDescription;
                 OvenPlayerConsole.log('Local SDP', localSDP);
-                mySdp = localSDP;   //test code
+                answerSdp = localSDP;   //test code
                 // my sdp send to server.
                 ws.send(JSON.stringify({
                     id: id,
@@ -72,7 +97,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                     const message = JSON.parse(e.data);
                     if(message.error){
                         let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
-                        tempError.error = error;
+                        tempError.error = message.error;
                         closePeer(tempError);
                         return false;
                     }
@@ -99,6 +124,15 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                                 }));
                             }
                         };
+
+                        peerConnection.oniceconnectionstatechange = function(event) {
+                            console.log(peerConnection.iceConnectionState);
+                            provider.trigger("oniceconnectionstatechange", {
+                                state : peerConnection.iceConnectionState,
+                                answerSdp : answerSdp
+                            });
+                        };
+
 
                         peerConnection.onnegotiationneeded = function() {
                             peerConnection.createOffer().then(function(desc) {
@@ -209,7 +243,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                     let tempError = ERRORS[PLAYER_WEBRTC_WS_ERROR];
                     tempError.error = error;
                     closePeer(tempError);
-                    reject(e);
+                    reject(error);
                 };
             }catch(error){
                 closePeer(error);
