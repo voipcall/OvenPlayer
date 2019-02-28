@@ -49,7 +49,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
         }]
     };
     const that = {};
-    let answerSdp = "";
+    let answerSdp = "", offerSdp = "";
 
 
     (function() {
@@ -129,7 +129,8 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                             console.log(peerConnection.iceConnectionState);
                             provider.trigger("oniceconnectionstatechange", {
                                 state : peerConnection.iceConnectionState,
-                                answerSdp : answerSdp
+                                answerSdp : answerSdp,
+                                offerSdp : offerSdp
                             });
                         };
 
@@ -206,6 +207,7 @@ const WebRTCLoader = function(provider, url, errorTrigger){
                         peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp)).then(function(){
                             if(peerConnection.remoteDescription.type === 'offer') {
                                 // This creates answer when I received offer from publisher.
+                                offerSdp = peerConnection.remoteDescription.sdp;
                                 peerConnection.createAnswer().then(function(desc){
                                     OvenPlayerConsole.log("createAnswer : success");
                                     onLocalDescription(message.id, peerConnection, desc);
