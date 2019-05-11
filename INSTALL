@@ -1,0 +1,28 @@
+
+    1. Access to https://github.com/AirenSoft/OvenPlayer
+    2. Download it by pressing the Clone or Download button and clicking Download ZIP in the menu that appears.
+    3. Unzip the OvenPlayer-0.9.zip
+    4. Move to OvenPlayer-0.9 -> dist -> production
+    5. Copy a ovenplayer folder
+    6. Paste to your webServer static folder
+    7. Import to ovenplayer path on your html
+    Like this <script src="your_static_path/ovenplayer/ovenplayer.js"></script>
+    8. Following the Quick Start menu https://github.com/AirenSoft/OvenPlayer
+   
+
+If you don’t have a web server. But you need a web server.
+Please consider the following methods:
+
+   1. Install a Nginx for CentOS7. (https://www.nginx.com/resources/wiki/start/topics/tutorials/install/)
+    sudo yum install epel-release
+    sudo yum install nginx
+   2. Move to Nginx root directory
+    cd /usr/share/nginx/html
+   3. Download OvenPlayer
+    git clone https://github.com/AirenSoft/OvenPlayer.git
+   4. Access to browser
+    http://YOUR_IP/OvenPlayer/docs/demo.html
+
+If the above process is difficult, use the public server we have prepared.
+
+http://demo.ovenplayer.com
